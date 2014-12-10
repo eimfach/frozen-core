@@ -1,0 +1,33 @@
+{
+  "name": "capsule-js",
+  "version": "0.0.0",
+  "description": "capsule.js - micro lib implementing an object creation paradigm for encapsulation",
+  "main": "capsule.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eimfach/capsule-js.git"
+  },
+  "keywords": [
+    "js",
+    "javascript",
+    "capsule",
+    "capsule.js",
+    "encapsulation"
+  ],
+  "author": "Robin Gruenke",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eimfach/capsule-js/issues"
+  },
+  "homepage": "https://github.com/eimfach/capsule-js",
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "mocha": "^2.0.1"
+  }
+}
