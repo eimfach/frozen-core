@@ -131,6 +131,61 @@ describe('Capsule', function(){
         object.root.should.equal("immutable");
 
     });
+    it('should accept an (dead-end) array or object as parameter or a Capsule which will not be inherited on extension', function(){
+
+        //param check
+        var obj = Capsule.extend({root: "mutable"}, {core: "immutable"}, [{rootDeadend: "mutable"}, {coreDeadend: "immutable"}]);
+        obj.should.have.property('root').that.equals("mutable");
+        obj.should.have.property('core').that.equals("immutable");
+        obj.should.have.property('rootDeadend').that.equals("mutable");
+        obj.should.have.property('coreDeadend').that.equals("immutable");
+
+        var obj = Capsule.extend({root: "mutable"}, {core: "immutable"}, [{coreDeadend: "immutable"}]);
+        obj.should.have.property('root').that.equals("mutable");
+        obj.should.have.property('core').that.equals("immutable");
+        obj.should.have.property('coreDeadend').that.equals("immutable");
+
+        var obj = Capsule.extend({root: "mutable"}, {core: "immutable"}, {coreDeadend: "immutable"});
+        obj.should.have.property('root').that.equals("mutable");
+        obj.should.have.property('core').that.equals("immutable");
+        obj.should.have.property('coreDeadend').that.equals("immutable");
+
+
+        //inheritation check
+        var object = Capsule.extend({root: "mutable"}, {core: "immutable"}, [{rootDeadend: "mutable", coreDeadend: "immutable"}]);
+        var child1 = object.extend({rootExtension: "mutable"}, {coreExtension: "immutable"}, [{newDeadendRoot: "mutable"},{newDeadendCore: "immutable"}]);
+        child1.should.have.property('root').that.equals("mutable");
+        child1.should.have.property('core').that.equals("immutable");
+        child1.should.have.property('rootExtension').that.equals("mutable");
+        child1.should.have.property('coreExtension').that.equals("immutable");
+        child1.should.have.property('newDeadendRoot').that.equals("mutable");
+        child1.should.have.property('newDeadendCore').that.equals("immutable");
+        child1.should.not.have.property('rootDeadend');
+        child1.should.not.have.property('coreDeadend');
+
+
+        var object1 = Capsule.extend({root: "mutable"}, {core: "immutable"}, {coreDeadend: "immutable"});
+        var child2 = object1.extend({rootExtension: "mutable"}, {coreExtension: "immutable"}, {newDeadendCore: "immutable"});
+        child2.should.have.property('root').that.equals("mutable");
+        child2.should.have.property('core').that.equals("immutable");
+        child2.should.have.property('rootExtension').that.equals("mutable");
+        child2.should.have.property('coreExtension').that.equals("immutable");
+        child2.should.have.property('newDeadendCore').that.equals("immutable");
+        child2.should.not.have.property('rootDeadend');
+        child2.should.not.have.property('coreDeadend');
+
+        var object1 = Capsule.extend({root: "mutable"}, {core: "immutable"}, [{coreDeadend: "immutable"}]);
+        var child2 = object1.extend({rootExtension: "mutable"}, {coreExtension: "immutable"}, [{newDeadendCore: "immutable"}]);
+        child2.should.have.property('root').that.equals("mutable");
+        child2.should.have.property('core').that.equals("immutable");
+        child2.should.have.property('rootExtension').that.equals("mutable");
+        child2.should.have.property('coreExtension').that.equals("immutable");
+        child2.should.have.property('newDeadendCore').that.equals("immutable");
+        child2.should.not.have.property('rootDeadend');
+        child2.should.not.have.property('coreDeadend');
+
+
+    });
 
 
 
