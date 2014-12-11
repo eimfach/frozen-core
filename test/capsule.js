@@ -5,23 +5,27 @@ chai.should();
 
 describe('Capsule', function(){
     it('should be a function', function(){
-        Capsule.should.be.a('function');
+        Capsule.should.be.an("object");
 
+    });
+    it('should have an property named extend which is a function', function(){
+
+        Capsule.should.have.a.property('extend').that.is.a("function");
     });
 
     it('should always return an "empty" object if none/wrong parameters are given.', function(){
 
-        var emptyObject = new Capsule();
+        var emptyObject = Capsule.extend();
         emptyObject.should.be.a("object");
         emptyObject.should.have.property("extend");
         emptyObject.extend.should.be.a("function");
 
-        emptyObject = new Capsule(1,2);
+        emptyObject = Capsule.extend(1,2);
         emptyObject.should.be.a("object");
         emptyObject.should.have.property("extend");
         emptyObject.extend.should.be.a("function");
 
-        emptyObject = new Capsule({});
+        emptyObject = Capsule.extend({});
         emptyObject.should.be.a("object");
         emptyObject.should.have.property("extend");
         emptyObject.extend.should.be.a("function");
@@ -30,24 +34,24 @@ describe('Capsule', function(){
 
     it('should merge two objects into a new one and provides an extend function on the new object.', function(){
 
-        var object = new Capsule({root: "mutable"}, {core: "immutable"});
+        var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
         object.should.have.property('root').that.equals("mutable");
         object.should.have.property('core').that.equals("immutable");
     });
     it('should provide an extend function to the merged object', function(){
 
-        var object = new Capsule({root: "mutable"}, {core: "immutable"});
+        var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
         object.should.have.property('extend').that.is.a("function");
 
     });
     it('should be possible to modify the property values given by the first parameter on construction.', function(){
-        var object = new Capsule({root: "mutable"}, {core: "immutable"});
+        var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
 
         object.root = "modified";
         object.root.should.equal("modified");
     });
     it('should not be possible to remove or add properties to the merged object.', function(){
-        var object = new Capsule({root: "mutable"}, {core: "immutable"});
+        var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
 
         delete object.root;
         object.root.should.exist;
@@ -59,13 +63,13 @@ describe('Capsule', function(){
 
     });
     it('should not be possible to modify the property values given my the second parameter on construction (frozen core).', function(){
-        var object = new Capsule({root: "mutable"}, {core: "immutable"});
+        var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
 
         object.core = "modified";
         object.core.should.equal("immutable");
     });
     it('should be possible to extend an merged object with new properties', function(){
-        var object = new Capsule({root: "mutable"}, {core: "immutable"});
+        var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
         var newObject = object.extend({rootExtension: "mutable"}, {coreExtension: "immutable"});
         newObject.should.have.property('root').that.equals("mutable");
         newObject.should.have.property('core').that.equals("immutable");
@@ -75,7 +79,7 @@ describe('Capsule', function(){
     });
 
     it('should be possible to modify the property values on the child object (created by extension) given by the first parameter on construction and the first parameter on extension', function(){
-        var object = new Capsule({root: "mutable"}, {core: "immutable"});
+        var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
         var newObject = object.extend({rootExtension: "mutable"}, {coreExtension: "immutable"});
 
         newObject.rootExtension = "modified";
@@ -86,7 +90,7 @@ describe('Capsule', function(){
 
     });
     it('should not be possible to remove or add properties to the child object (created by extension).', function(){
-        var object = new Capsule({root: "mutable"}, {core: "immutable"});
+        var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
         var newObject = object.extend({rootExtension: "mutable"}, {coreExtension: "immutable"});
 
         delete object.rootExtension;
@@ -103,7 +107,7 @@ describe('Capsule', function(){
 
     });
     it('should not be possible to modify the property values given my the second parameter on construction and the second parameter on extension (frozen core).', function(){
-        var object = new Capsule({root: "mutable"}, {core: "immutable"});
+        var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
         var newObject = object.extend({rootExtension: "mutable"}, {coreExtension: "immutable"});
 
         object.core = "modified";
