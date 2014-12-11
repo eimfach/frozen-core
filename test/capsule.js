@@ -31,7 +31,6 @@ describe('Capsule', function(){
         emptyObject.extend.should.be.a("function");
 
     });
-
     it('should merge two objects into a new one and provides an extend function on the new object.', function(){
 
         var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
@@ -115,6 +114,22 @@ describe('Capsule', function(){
 
         newObject.coreExtension = "modified";
         newObject.coreExtension.should.equal("immutable");
+    });
+
+    it('should return a complete frozen object if only one parameter is given', function(){
+
+        var object = Capsule.extend({root: "immutable"});
+
+        delete object.root;
+        object.root.should.exist;
+        object.root.should.be.a("string");
+
+        object.newProperty = 1;
+        (1).should.not.equal(object.newProperty);
+
+        object.root = "modified";
+        object.root.should.equal("immutable");
+
     });
 
 

@@ -4,13 +4,9 @@ var Capsule = {
     extend: function(rootObject, coreObject){
 
         if(typeof rootObject !== "object") rootObject = {};
+        if(coreObject === undefined) coreObject = rootObject;
         if(typeof coreObject !== "object") coreObject = {};
 
-        //add prototype properties
-        /*var publics = Object.keys(Capsule.prototype);
-        for(var i = 0; i < publics.length; i++){
-            rootObject[publics[i]] = Capsule.prototype[publics[i]];
-        }*/
 
         // add a extension method to each object within its core, which others can inherit from
         coreObject.extend = function(rootExtension, coreExtension){
