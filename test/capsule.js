@@ -76,6 +76,18 @@ describe('Capsule', function(){
         newObject.should.have.property('coreExtension').that.equals("immutable");
         newObject.should.have.property('extend').that.is.a("function");
     });
+    it('should overwrite existing root property values with equal ones (if given) on extension', function(){
+
+        var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
+        var child = object.extend({root: "modified"}, {core: "immutable"});
+        child.should.have.property('root').that.equals("modified");
+    });
+    it('should not overwrite existing core properties with equal ones (if given) on extension', function(){
+
+        var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
+        var child = object.extend({root: "modified"}, {core: "modified"});
+        child.should.have.property('core').that.equals("immutable");
+    });
 
     it('should be possible to modify the property values on the child object (created by extension) given by the first parameter on construction and the first parameter on extension', function(){
         var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
@@ -186,7 +198,5 @@ describe('Capsule', function(){
 
 
     });
-
-
 
 });

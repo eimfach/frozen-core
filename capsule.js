@@ -18,8 +18,8 @@ var Capsule = {
         coreObject.extend = function(rootExtension, coreExtension, deadEndObject){
 
             //inherit from parent root
-            Object.keys(rootObject).forEach(function(property){
-                rootExtension[property] = rootObject[property];
+            Object.keys(rootExtension).forEach(function(property){
+                rootObject[property] = rootExtension[property];
             });
 
             //inherit from parent core
@@ -27,7 +27,7 @@ var Capsule = {
                 coreExtension[property] = coreObject[property];
             });
 
-            return Capsule.extend(rootExtension, coreExtension, deadEndObject);
+            return Capsule.extend(rootObject, coreExtension, deadEndObject);
         };
 
         var coreDeadend = {};
@@ -55,8 +55,6 @@ var Capsule = {
         // freeze the core
         var frozenCore = Object.freeze(coreObject);
         var frozenMergeCore = Object.freeze(coreMergeObject);
-        var coreProps = Object.keys(frozenCore);
-        var mergeCoreProps = Object.keys(frozenMergeCore);
 
         //now extend the root merge object with the core properties and their descriptors
         Object.keys(frozenCore).forEach(function(property){
