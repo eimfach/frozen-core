@@ -17,6 +17,10 @@ var Capsule = {
         // add a extension method to each object within its core, which others can inherit from
         coreObject.extend = function(rootExtension, coreExtension, deadEndObject){
 
+            if(typeof rootExtension !== "object") rootExtension = {};
+            if(typeof coreExtension !== "object") coreExtension = {};
+
+            rootExtension.parent = rootMergeObject;
             //inherit from parent root
             Object.keys(rootExtension).forEach(function(property){
                 rootObject[property] = rootExtension[property];

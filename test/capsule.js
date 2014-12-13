@@ -76,6 +76,13 @@ describe('Capsule', function(){
         newObject.should.have.property('coreExtension').that.equals("immutable");
         newObject.should.have.property('extend').that.is.a("function");
     });
+    it('the child object should have a reference to its creator', function(){
+
+        var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
+        var child = object.extend({root: "mutable"});
+        child.should.have.property('parent').that.deep.equals(object);
+
+    });
     it('should overwrite existing root property values with equal ones (if given) on extension', function(){
 
         var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
@@ -198,5 +205,6 @@ describe('Capsule', function(){
 
 
     });
+
 
 });
