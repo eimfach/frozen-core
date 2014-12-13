@@ -18,17 +18,14 @@ var Capsule = {
         coreObject.extend = function(rootExtension, coreExtension, deadEndObject){
 
             //inherit from parent root
-            var rootProps = Object.keys(rootObject);
-            for(var k = 0; k < rootProps.length; k++){
-                rootExtension[rootProps[k]] = rootObject[rootProps[k]];
-
-            }
+            Object.keys(rootObject).forEach(function(property){
+                rootExtension[property] = rootObject[property];
+            });
 
             //inherit from parent core
-            var coreProps = Object.keys(coreObject);
-            for(var j = 0; j < coreProps.length; j++){
-                coreExtension[coreProps[j]] = coreObject[coreProps[j]];
-            }
+            Object.keys(coreObject).forEach(function(property){
+                coreExtension[property] = coreObject[property];
+            });
 
             return Capsule.extend(rootExtension, coreExtension, deadEndObject);
         };
@@ -50,12 +47,10 @@ var Capsule = {
 
         }
         // extend the core merge object with the deadend core properties from the deadend object
-        var deadProps = Object.keys(coreDeadend);
-        for(var r = 0; r < deadProps.length; r++){
+        Object.keys(coreDeadend).forEach(function(property){
+            coreMergeObject[property] = coreDeadend[property];
+        });
 
-            coreMergeObject[deadProps[r]] = coreDeadend[deadProps[r]];
-
-        }
 
         // freeze the core
         var frozenCore = Object.freeze(coreObject);
@@ -64,25 +59,23 @@ var Capsule = {
         var mergeCoreProps = Object.keys(frozenMergeCore);
 
         //now extend the root merge object with the core properties and their descriptors
-        for(var l = 0; l < coreProps.length; l++){
+        Object.keys(frozenCore).forEach(function(property){
+            Object.defineProperty(rootMergeObject, property, Object.getOwnPropertyDescriptor(frozenCore, property) );
+            rootMergeObject[property] = frozenCore[property];
 
-            Object.defineProperty(rootMergeObject, coreProps[l], Object.getOwnPropertyDescriptor(frozenCore, coreProps[l]) );
-            rootMergeObject[coreProps[l]] = frozenCore[coreProps[l]];
+        });
 
-        }
         //extend the root merge object with the rootobject
-        var rootProps = Object.keys(rootObject);
-        for(var h = 0; h < rootProps.length; h++){
+        Object.keys(rootObject).forEach(function(property){
+            rootMergeObject[property] = rootObject[property];
+        });
 
-            rootMergeObject[rootProps[h]] = rootObject[rootProps[h]];
-        }
         //now extend the root merge object with the core deadend properties and their descriptors
-        for(var t = 0; t < mergeCoreProps.length; t++){
+        Object.keys(frozenMergeCore).forEach(function(property){
+            Object.defineProperty(rootMergeObject, property, Object.getOwnPropertyDescriptor(frozenMergeCore, property) );
+            rootMergeObject[property] = frozenMergeCore[property];
 
-            Object.defineProperty(rootMergeObject, mergeCoreProps[t], Object.getOwnPropertyDescriptor(frozenMergeCore, mergeCoreProps[t]) );
-            rootMergeObject[mergeCoreProps[t]] = frozenMergeCore[mergeCoreProps[t]];
-
-        }
+        });
 
         var rootDeadend = {};
         if(deadEndObject.constructor === Array &&
@@ -92,14 +85,12 @@ var Capsule = {
             rootDeadend = deadEndObject[0];
         }
         //extend the root merge object with the root deadend properties
-        var deadRootProps = Object.keys(rootDeadend);
-        for(var y = 0; y < deadRootProps.length; y++){
+        Object.keys(rootDeadend).forEach(function(property){
+            rootMergeObject[property] = rootDeadend[property];
 
-            rootMergeObject[deadRootProps[y]] = rootDeadend[deadRootProps[y]];
-        }
+        });
 
-
-        // return the sealed the root object
+        // return the object sealed
         return Object.seal(rootMergeObject);
     }
 
