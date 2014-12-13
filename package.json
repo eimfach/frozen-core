@@ -1,6 +1,6 @@
 {
   "name": "capsule-js",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "capsule.js - micro lib implementing an object creation paradigm for encapsulation",
   "main": "capsule.js",
   "directories": {

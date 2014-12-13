@@ -76,11 +76,12 @@ describe('Capsule', function(){
         newObject.should.have.property('coreExtension').that.equals("immutable");
         newObject.should.have.property('extend').that.is.a("function");
     });
-    it('the child object should have a reference to its creator', function(){
+    it('create a child object which should have a reference to its creator', function(){
 
         var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
         var child = object.extend({root: "mutable"});
         child.should.have.property('parent').that.deep.equals(object);
+
 
     });
     it('should overwrite existing root property values with equal ones (if given) on extension', function(){
@@ -206,5 +207,47 @@ describe('Capsule', function(){
 
     });
 
+    it('should have a function "bubble" which executes all parent functions and its own', function(){
+
+        var root = Capsule.extend({
+            title: "root",
+            render: function(){
+                root.title = "modified"
+            }
+        }, {
+
+        });
+        var master = root.extend({
+            title: "master"
+        }, {
+
+        });
+        var parent = master.extend({
+            title: "parent",
+            render: function(){
+                parent.title = "modified";
+            }
+        }, {
+
+        });
+
+        var child = parent.extend({
+            title: "child",
+            render: function(){
+                child.title = "modified";
+            }
+        }, {
+        });
+
+        child.should.have.property('bubble').that.is.a('function');
+
+        child.bubble('render');
+
+        child.title.should.equal("modified");
+        parent.title.should.equal("modified");
+        master.title.should.equal("master");
+        root.title.should.equal("modified");
+
+    });
 
 });
