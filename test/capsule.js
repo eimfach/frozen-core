@@ -76,7 +76,7 @@ describe('Capsule', function(){
         newObject.should.have.property('coreExtension').that.equals("immutable");
         newObject.should.have.property('extend').that.is.a("function");
     });
-    it('create a child object which should have a reference to its creator', function(){
+    it('creates a child object which should have a reference to its creator', function(){
 
         var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
         var child = object.extend({root: "mutable"});
@@ -84,19 +84,34 @@ describe('Capsule', function(){
 
 
     });
-    it('should overwrite existing root property values with equal ones (if given) on extension', function(){
+    it('should overwrite existing state property values with equal ones (if given) on extension', function(){
 
         var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
         var child = object.extend({root: "modified"}, {core: "immutable"});
         child.should.have.property('root').that.equals("modified");
     });
-    it('should not overwrite existing core properties with equal ones (if given) on extension', function(){
+    it('should overwrite existing core properties with equal ones (if given) on extension', function(){
 
         var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
         var child = object.extend({root: "modified"}, {core: "modified"});
-        child.should.have.property('core').that.equals("immutable");
+        child.should.have.property('core').that.equals("modified");
     });
+    it('should prevent overwriting core properties with wrong datatypes on extension', function(){
 
+        var object = Capsule.extend({nooverwrite: function(){}});
+        var child = object.extend({nooverwrite: "modified"});
+        child.nooverwrite.should.be.a("function");
+    });
+    it('prevent overwriting its own core properties ', function(){
+        //this is no spec for the core properties !
+        var object = Capsule.extend({core: "immutable"});
+        var child = object.extend({extend: function(){return "modified"}, parent: {}, bubble: function(){return "modified"}});
+        var child2 = child.extend();
+        child2.should.be.a('object').that.not.equals("modified");
+        child.parent.should.not.deep.equal({});
+        var result = child.bubble();
+        result.should.not.equal("modified");
+    });
     it('should be possible to modify the property values on the child object (created by extension) given by the first parameter on construction and the first parameter on extension', function(){
         var object = Capsule.extend({root: "mutable"}, {core: "immutable"});
         var newObject = object.extend({rootExtension: "mutable"}, {coreExtension: "immutable"});
@@ -150,6 +165,12 @@ describe('Capsule', function(){
         object.root = "modified";
         object.root.should.equal("immutable");
 
+        var child = object.extend({core: "immutable"});
+        child.core = "modified";
+        child.core.should.equal("immutable");
+
+        Object.isFrozen(object).should.be.true;
+        Object.isFrozen(child).should.be.true;
     });
     it('should accept an (dead-end) array or object as parameter or a Capsule which will not be inherited on extension', function(){
 
