@@ -102,6 +102,8 @@ describe('Capsule', function(){
         var child = object.extend({nooverwrite: "modified"});
         child.nooverwrite.should.be.a("function");
     });
+
+
     it('prevent overwriting its own core properties ', function(){
         //this is no spec for the core properties !
         var object = Capsule.extend({core: "immutable"});
@@ -271,4 +273,25 @@ describe('Capsule', function(){
 
     });
 
+
+    describe('Strictmode', function(){
+        it('should throw a typeerror on try to overwrite with wrong datatype', function(){
+
+            Capsule.enableStrict();
+            var object = Capsule.extend({nooverwrite: function(){}});
+            var errorThrown = false;
+
+            try{
+                var child = object.extend({nooverwrite: "modified"});
+
+            } catch(e){
+                errorThrown = true;
+                e.should.have.property('type').that.equals('TypeError');
+                e.should.have.property('message').that.is.not.empty;
+            }
+            errorThrown.should.be.true;
+        });
+    });
+
 });
+
