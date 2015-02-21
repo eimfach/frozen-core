@@ -1,13 +1,10 @@
 (function(module){
-    'use sctrict';
+    'use strict';
 
     var strict = false;
-
     var Capsule = {
 
         /**
-         *
-         *
          * @param state Spec for Object state, mutable properties
          * @param core Spec for immutable properties (Provide just one Object for pureness)
          * @param deadEnd Spec for non inheritable properties
@@ -17,6 +14,7 @@
             if(typeof state !== "object") state = {};
             if(core === undefined) core = state;
             if(typeof core !== "object") core = {};
+            if(typeof state !== "object") state = {};
             if(typeof deadEnd !== "object") deadEnd = {};
 
             // to not insert deadend properties into the inherited closures
@@ -103,8 +101,8 @@
 
             //now extend the new object with the core properties and their descriptors
             Object.keys(frozenCore).forEach(function(property){
-                Object.defineProperty(parentObject, property, Object.getOwnPropertyDescriptor(frozenCore, property) );
                 parentObject[property] = frozenCore[property];
+                Object.defineProperty(parentObject, property, Object.getOwnPropertyDescriptor(frozenCore, property) );
 
             });
 
