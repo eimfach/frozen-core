@@ -1,5 +1,5 @@
 # capsule-js
-
+![](https://travis-ci.org/eimfach/capsule-js.svg?branch=master)
 - in progress - 
 
 General purpose lib for Object creation.
