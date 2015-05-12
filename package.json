@@ -1,6 +1,6 @@
 {
   "name": "@eimfach/capsule-js",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "capsule.js - micro lib implementing an object creation paradigm for encapsulation",
   "main": "capsule.js",
   "directories": {
@@ -28,6 +28,7 @@
   "homepage": "https://github.com/eimfach/capsule-js",
   "devDependencies": {
     "chai": "^1.10.0",
-    "mocha": "^2.0.1"
+    "mocha": "^2.0.1",
+    "q": "^1.4.0"
   }
 }

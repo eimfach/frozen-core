@@ -10,58 +10,68 @@ var Capsule = {
      * options.deadEnd Spec for non inheritable properties
      */
     extend: function(options){
-        if(typeof options !== 'object') options = {};
+        if(typeof options !== 'object'){
+            options = {};
+        }
         var core = options.core || {},
-            state = options.state || {};
+            state = options.state || {},
+            creation = {};
 
-        var parentObject = {};
-        var coreMergeObject = {};
+        var coreCopy = Object.keys(core).map(keepType(['function'], core))[0] || {}; //reduce to functions & retain copy
+        var stateCopy = Object.keys(state).map(keepType(['string', 'number', 'array'], state))[0] || {};
+        var stateSnapshot = Object.freeze(state);
 
+        // bind scope of core functions to snapshot
+        Object.keys(core).map(isolate(core, stateSnapshot));
+
+        core.getSnapshot = function(){
+            return stateSnapshot;
+        };
         // add a extension method to each object within its core, which others can inherit from
         core.extend = function(options){
             if(typeof options !== 'object') options = {};
-            options.core = extendObject(options.core || {}, core, true );
-            options.state = extendObject(options.state || {}, state );
-            options.core.parent = parentObject;
+            options.core = extendObject(options.core || {}, coreCopy, true);
+            options.state = extendObject(options.state || {}, stateCopy, true );
+            Object.defineProperty(options.core, 'parent', {
+                value: creation,
+                enumerable: false,
+                writeable: false,
+                configurable: false
+            });
 
             return Capsule.extend(options);
         };
-        core.bubble = function(call){
-            if(typeof parentObject[call] === "function"){
-                if(typeof parentObject.parent === "object"){
+        core.bubble = function(call, options){
 
-                    parentObject[call]();
-                    parentObject.parent.bubble(call);
-                } else {
-                    parentObject[call](); // parent is the forebear, bubbling end
-                }
-            } // bubble interrupted //TODO: evaluate throwing error on strict mode //TODO: evaluate this possibility in general
+            core[call](options);
+
+            if(typeof core.parent === "object"){
+
+                core.parent.bubble(call, options);
+            }
 
             return true;
         };
 
 
         /**STATE**/
-            //extend the new object with the state object
-        parentObject = extendObject(parentObject, state);
+        //extend the new object with the state object
+        creation = extendObject(creation, stateCopy);
 
         /**CORE**/
-
-        //merge core objects
-        coreMergeObject = extendObject(coreMergeObject, core);
-
         // freeze the core
-        var frozenCore = Object.freeze(coreMergeObject);
+        var frozenCore = Object.freeze(core);
 
         //now extend the new object with the core properties and their descriptors
-        Object.keys(frozenCore).forEach(function(property){
-            parentObject[property] = frozenCore[property];
-            Object.defineProperty(parentObject, property, Object.getOwnPropertyDescriptor(frozenCore, property) );
+        creation = extendObject(creation, frozenCore);
 
-        });
+        //redefine parent due to enumerable false and object copy
+        if(typeof core.parent === 'object'){
+            Object.defineProperty(creation, 'parent', Object.getOwnPropertyDescriptor(core, 'parent'));
+        }
 
         // return the new object sealed
-        return Object.seal(parentObject);
+        return Object.seal(creation);
     },
 
     enableStrict: function(){
@@ -71,10 +81,36 @@ var Capsule = {
 
 };
 
-/* pure */
-var extendObject = function(child, parent, typesafe){
+/* a curry function, binds a function to a specific scope */
+var isolate = function(obj, scope){
 
-//TODO: property descriptor inheritance
+    return function(property){
+
+        var refCopy = obj[property];
+        obj[property] = function(options){
+
+            return refCopy.call(scope, options);
+        };
+
+    };
+};
+var isIn = function(val, list){
+    return list.indexOf(val) > -1;
+};
+/* curry function, keep values of certain type in an object, delete the remains */
+var keepType = function(typeList, obj){
+    var copy = {};
+    return function(property){
+        Object.defineProperty(copy, property, Object.getOwnPropertyDescriptor(obj, property));
+
+        if(!isIn(typeof obj[property], typeList)){
+            delete obj[property];
+        }
+        return copy;
+    };
+};
+
+var extendObject = function(child, parent, typesafe){
 
     var result = {};
 
@@ -85,13 +121,14 @@ var extendObject = function(child, parent, typesafe){
             if(safe === true){
                 // has the core this property already?
                 if(typeof result[property] === "undefined" || typeof result[property] === typeof object[property]){
-                    result[property] = object[property];
+
+                    Object.defineProperty(result, property, Object.getOwnPropertyDescriptor(object, property));
 
                 }  else if(strict === true){
                     throw new TypeError();
                 }
             } else {
-                result[property] = object[property];
+                Object.defineProperty(result, property, Object.getOwnPropertyDescriptor(object, property));
             }
         });
     };
