@@ -310,7 +310,7 @@ describe('Capsule', function(){
     'mutable'.should.equal(id);
 
   });
-
+  //TODO: should make sure isolated scope is not writeable
   it('should make sure, inherited and non inherited core functions have overwritten or inherited or new properties from state in their scope', function(){
 
     var obj = Capsule.extend({
