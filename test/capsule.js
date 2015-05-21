@@ -310,7 +310,23 @@ describe('Capsule', function(){
     'mutable'.should.equal(id);
 
   });
-  //TODO: should make sure isolated scope is not writeable
+  it('should make sure isolated scope is not writeable', function(){
+
+    var obj = Capsule.extend({
+      state: {
+        member: 'john'
+      },
+      core: {
+        modifyState: function(member){
+          this.member = member;
+          return this.member;
+        }
+      }
+    });
+
+    var member = obj.modifyState('fred');
+    member.should.equal('john');
+  });
   it('should make sure, inherited and non inherited core functions have overwritten or inherited or new properties from state in their scope', function(){
 
     var obj = Capsule.extend({
@@ -350,6 +366,23 @@ describe('Capsule', function(){
     var randomTmpl = chd.expose('random');
     (123).should.equal(randomTmpl);
 
+    //TODO: 4 of 6 covered
+
+  });
+  it('should have a method "getSnapshot" which returns the isolated scope', function(){
+
+
+    var obj = Capsule.extend({
+      state: {
+        id: 1,
+        member: "john"
+      }
+    });
+
+    (obj.getSnapshot()).should.deep.equal({
+      id: 1,
+      member: "john"
+    });
   });
 
 
