@@ -12,10 +12,13 @@ gulp.task('cover', function (cb) {
     .pipe(mocha())
     .pipe(istanbul.writeReports()) // Creating the reports after tests runned
     .pipe(istanbul.enforceThresholds({ thresholds: { global: 90 } })) // Enforce a coverage of at least 90%
-    .on('end', function(){
-      gulp.src('coverage/lcov.info')
-      .pipe(coveralls());
-    });
+    .on('end', cb);
   });
 });
+
+gulp.task('coveralls', function() {
+  return gulp.src('./coverage/lcov.info')
+  .pipe(coveralls());
+});
+
 gulp.task('default', ['cover']);
