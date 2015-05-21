@@ -279,7 +279,7 @@ describe('Capsule', function(){
       resolved.should.equal('<h2>I am Superman</h2>');
 
     });
-    (false).should.be.true;
+
 
   });
   it('should make sure, only functions can be created in core scope', function(){
