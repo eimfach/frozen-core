@@ -19,11 +19,22 @@ var Capsule = {
 
         var coreCopy = Object.keys(core).map(keepType(['function'], core))[0] || {}; //reduce to functions & retain copy
         var stateCopy = Object.keys(state).map(keepType(['string', 'number', 'array'], state))[0] || {};
-        var stateSnapshot = Object.freeze(state);
+        var stateSnapshot = state;
 
         // bind scope of core functions to snapshot
-        Object.keys(core).map(isolate(core, stateSnapshot));
+        Object.keys(core).map(isolate(core, state));
 
+        //define general core api
+        //stateSnapshot has scope on this api
+        core.hasParent = function(){
+            return typeof core.parent === 'object';
+        };
+        Object.defineProperty(stateSnapshot, 'hasParent', {
+            value: core.hasParent,
+            enumerable: false,
+            writeable: false,
+            configurable: false
+        });
         core.getSnapshot = function(){
             return stateSnapshot;
         };
@@ -41,6 +52,12 @@ var Capsule = {
 
             return Capsule.extend(options);
         };
+        Object.defineProperty(stateSnapshot, 'extend', {
+            value: core.extend,
+            enumerable: false,
+            writeable: false,
+            configurable: false
+        });
         core.bubble = function(call, options){
 
             core[call](options);
@@ -52,6 +69,14 @@ var Capsule = {
 
             return true;
         };
+        Object.defineProperty(stateSnapshot, 'bubble', {
+            value: core.bubble,
+            enumerable: false,
+            writeable: false,
+            configurable: false
+        });
+        // no force the stateSnapshot to be immutable
+        Object.freeze(stateSnapshot);
 
 
         /**STATE**/
@@ -94,7 +119,7 @@ var isolate = function(obj, scope){
 
     };
 };
-var isIn = function(val, list){
+var isIn = function(list, val){
     return list.indexOf(val) > -1;
 };
 /* curry function, keep values of certain type in an object, delete the remains */
@@ -103,7 +128,7 @@ var keepType = function(typeList, obj){
     return function(property){
         Object.defineProperty(copy, property, Object.getOwnPropertyDescriptor(obj, property));
 
-        if(!isIn(typeof obj[property], typeList)){
+        if(!isIn(typeList, typeof obj[property])){
             delete obj[property];
         }
         return copy;

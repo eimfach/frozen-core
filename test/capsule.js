@@ -245,13 +245,42 @@ describe('Capsule', function(){
     child.model.should.equal("modified");
 
   });
+  it('isolated core should have access to capsule core api', function(){
+
+    var cube = Capsule.extend({
+      core: {
+
+        mutate: function(){
+          return this.extend({
+            state: {
+              width: this.width+20,
+              height: this.height+20,
+              depth: this.depth+20
+            }
+          });
+        }
+      },
+      state: {
+        width: 0,
+        height: 0,
+        depth: 0
+      }
+    });
+
+    var mutatedCube = cube.mutate();
+
+    (20).should.equal(mutatedCube.width);
+    (20).should.equal(mutatedCube.height);
+    (20).should.equal(mutatedCube.height);
+
+
+  });
   it('should have a function "bubble" which executes all parent functions and its own', function(){
 
     var obj = Capsule.extend({
       core: {
         render: function(options){
-
-          options.deferred.resolve(this.template.split('$').join(options.value));
+          options.notifyOrResolve.call(this, this.template.split('$').join(this.content));
         }
       },
       state: {
@@ -259,7 +288,16 @@ describe('Capsule', function(){
         template: "<h1>$</h1>",
         refresh: function(deferred){
 
-          this.bubble('render', {value: this.content, deferred: deferred});
+          this.bubble('render', {
+            notifyOrResolve: function(value){
+              //TODO: api plugin
+              if(this.hasParent()){
+                deferred.notify(value);
+              } else {
+                deferred.resolve(value);
+              }
+            }
+          });
         }
       }
     });
@@ -273,13 +311,20 @@ describe('Capsule', function(){
     });
 
     var deferred = q.defer();
-    chd.refresh(deferred);
-
-    deferred.promise.then(function(resolved){
-      resolved.should.equal('<h2>I am Superman</h2>');
+    var results = [];
+    deferred.promise.progress(function(notified){
+      results.push(notified);
 
     });
+    deferred.promise.then(function(resolved){
+      results.push(resolved);
+    });
+    deferred.promise.finally(function(value){
+      "<h2>I am Superman</h2>".should.equal(value[0]);
+      "<h1>Hello World!</h1>".should.equal(value[1]);
 
+    });
+    chd.refresh(deferred);
 
   });
   it('should make sure, only functions can be created in core scope', function(){
