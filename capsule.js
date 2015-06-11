@@ -128,7 +128,7 @@ var keepType = function(typeList, obj){
     return function(property){
         Object.defineProperty(copy, property, Object.getOwnPropertyDescriptor(obj, property));
 
-        if(!isIn(typeList, typeof obj[property])){
+        if(!isIn(typeList, (obj[property]==='array') ? 'array' : typeof obj[property])){
             delete obj[property];
         }
         return copy;
