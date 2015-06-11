@@ -1,6 +1,6 @@
 {
   "name": "@eimfach/capsule-js",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "capsule.js - micro lib implementing an object creation paradigm for encapsulation",
   "main": "capsule.js",
   "directories": {
