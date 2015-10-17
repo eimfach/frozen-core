@@ -1,13 +1,12 @@
 'use strict';
 
 var strict = false;
-var Capsule = {
+var FrozenCore = {
 
     /**
      * @param options Spec for Object
      * options.state Spec for mutable properties
      * options.core Spec for immutable properties (Provide just one Object for pureness)
-     * options.deadEnd Spec for non inheritable properties
      */
     extend: function(options){
         if(typeof options !== 'object'){
@@ -50,7 +49,7 @@ var Capsule = {
                 configurable: false
             });
 
-            return Capsule.extend(options);
+            return FrozenCore.extend(options);
         };
         Object.defineProperty(stateSnapshot, 'extend', {
             value: core.extend,
@@ -75,7 +74,7 @@ var Capsule = {
             writeable: false,
             configurable: false
         });
-        // no force the stateSnapshot to be immutable
+        // force the stateSnapshot to be immutable
         Object.freeze(stateSnapshot);
 
 
@@ -163,7 +162,7 @@ var extendObject = function(child, parent, typesafe){
     return result;
 };
 
-module.exports = Capsule;
+module.exports = FrozenCore;
 
 
 

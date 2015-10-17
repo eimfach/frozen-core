@@ -1,32 +1,32 @@
 var chai = require('chai');
 var q = require('q');
-var Capsule = require('../capsule');
+var FrozenCore = require('../frozen-core');
 
 chai.should();
 
-describe('Capsule', function(){
+describe('FrozenCore', function(){
   it('should be a function', function(){
-    Capsule.should.be.an("object");
+    FrozenCore.should.be.an("object");
 
   });
   it('should have an property named extend which is a function', function(){
 
-    Capsule.should.have.a.property('extend').that.is.a("function");
+    FrozenCore.should.have.a.property('extend').that.is.a("function");
   });
 
   it('should always return an "empty" object if none/wrong parameters are given.', function(){
 
-    var emptyObject = Capsule.extend();
+    var emptyObject = FrozenCore.extend();
     emptyObject.should.be.a("object");
     emptyObject.should.have.property("extend");
     emptyObject.extend.should.be.a("function");
 
-    emptyObject = Capsule.extend(1, 2);
+    emptyObject = FrozenCore.extend(1, 2);
     emptyObject.should.be.a("object");
     emptyObject.should.have.property("extend");
     emptyObject.extend.should.be.a("function");
 
-    emptyObject = Capsule.extend({});
+    emptyObject = FrozenCore.extend({});
     emptyObject.should.be.a("object");
     emptyObject.should.have.property("extend");
     emptyObject.extend.should.be.a("function");
@@ -34,7 +34,7 @@ describe('Capsule', function(){
   });
   it('should merge two objects into a new one and provides an extend function on the new object.', function(){
 
-    var object = Capsule.extend({
+    var object = FrozenCore.extend({
       state: {
         model: 'mutable',
         face: 'immutable'
@@ -45,12 +45,12 @@ describe('Capsule', function(){
   });
   it('should provide an extend function to the merged object', function(){
 
-    var object = Capsule.extend();
+    var object = FrozenCore.extend();
     object.should.have.property('extend').that.is.a("function");
 
   });
   it('should be possible to modify the property values given by the state object.', function(){
-    var object = Capsule.extend({
+    var object = FrozenCore.extend({
       state: {
         model: 'mutable',
         face: 'immutable'
@@ -61,7 +61,7 @@ describe('Capsule', function(){
     object.model.should.equal("modified");
   });
   it('should not be possible to remove or add properties to the merged object.', function(){
-    var object = Capsule.extend({
+    var object = FrozenCore.extend({
       state: {
         model: 'mutable',
         face: 'immutable'
@@ -78,7 +78,7 @@ describe('Capsule', function(){
 
   });
   it('should not be possible to modify the property values given by the core object (frozen core).', function(){
-    var object = Capsule.extend({
+    var object = FrozenCore.extend({
       core: {
         id: function(){
           return 'immutable'
@@ -89,7 +89,7 @@ describe('Capsule', function(){
     object.id.should.be.a.function;
   });
   it('should be possible to extend an merged object with new properties', function(){
-    var object = Capsule.extend({
+    var object = FrozenCore.extend({
       state: {
         model: 'mutable',
         face: 'mutable'
@@ -109,7 +109,7 @@ describe('Capsule', function(){
   });
   it('creates a child object which should have a reference to its creator', function(){
 
-    var object = Capsule.extend();
+    var object = FrozenCore.extend();
     var child = object.extend();
     var parent = child.parent;
     parent.should.deep.equal(object);
@@ -118,7 +118,7 @@ describe('Capsule', function(){
   });
   it('should overwrite existing state property values', function(){
 
-    var object = Capsule.extend({
+    var object = FrozenCore.extend({
       state: {
         model: "mutable",
         face: "mutable"
@@ -134,7 +134,7 @@ describe('Capsule', function(){
   });
   it('should overwrite existing core properties on extension', function(){
 
-    var object = Capsule.extend({
+    var object = FrozenCore.extend({
       core: {
         create: function(){
           return 'old';
@@ -156,7 +156,7 @@ describe('Capsule', function(){
   });
   it('should prevent overwriting core properties with wrong types on extension', function(){
 
-    var object = Capsule.extend({
+    var object = FrozenCore.extend({
       core: {
         id: function(){
 
@@ -174,7 +174,7 @@ describe('Capsule', function(){
 
   it('should prevent overwriting state properties with wrong types on extension', function(){
 
-    var object = Capsule.extend({
+    var object = FrozenCore.extend({
       state: {
         id: function(){
 
@@ -193,7 +193,7 @@ describe('Capsule', function(){
 
   it('prevent overwriting its own core properties ', function(){
     //this is no spec for the core properties !
-    var object = Capsule.extend({
+    var object = FrozenCore.extend({
       core: {
         id: "immutable"
       }
@@ -225,7 +225,7 @@ describe('Capsule', function(){
     (result).should.not.equal("modified");
   });
   it('should be possible to modify the property values from child extension state object', function(){
-    var object = Capsule.extend({
+    var object = FrozenCore.extend({
       state: {
         model: "mutable"
       }
@@ -247,7 +247,7 @@ describe('Capsule', function(){
   });
   it('isolated core should have access to capsule core api', function(){
 
-    var cube = Capsule.extend({
+    var cube = FrozenCore.extend({
       core: {
 
         mutate: function(){
@@ -277,7 +277,7 @@ describe('Capsule', function(){
   });
   it('should have a function "bubble" which executes all parent functions and its own', function(){
 
-    var obj = Capsule.extend({
+    var obj = FrozenCore.extend({
       core: {
         render: function(options){
           options.notifyOrResolve.call(this, this.template.split('$').join(this.content));
@@ -330,7 +330,7 @@ describe('Capsule', function(){
   it('should make sure, only functions can be created in core scope', function(){
 
 
-    var obj = Capsule.extend({
+    var obj = FrozenCore.extend({
       core: {
         stateVar: 'hello'
       }
@@ -340,7 +340,7 @@ describe('Capsule', function(){
   });
   it('should make sure, functions in core scope have an isolated scope which inherited all scope properties', function(){
 
-    var obj = Capsule.extend({
+    var obj = FrozenCore.extend({
       core: {
         expose: function(prop){
           return this[prop];
@@ -357,7 +357,7 @@ describe('Capsule', function(){
   });
   it('should make sure isolated scope is not writeable', function(){
 
-    var obj = Capsule.extend({
+    var obj = FrozenCore.extend({
       state: {
         member: 'john'
       },
@@ -374,7 +374,7 @@ describe('Capsule', function(){
   });
   it('should make sure, inherited and non inherited core functions have overwritten or inherited or new properties from state in their scope', function(){
 
-    var obj = Capsule.extend({
+    var obj = FrozenCore.extend({
       core: {
         expose: function(prop){
           return this[prop];
@@ -417,7 +417,7 @@ describe('Capsule', function(){
   it('should have a method "getSnapshot" which returns the isolated scope', function(){
 
 
-    var obj = Capsule.extend({
+    var obj = FrozenCore.extend({
       state: {
         id: 1,
         member: "john"
@@ -434,8 +434,8 @@ describe('Capsule', function(){
   describe('Strictmode', function(){
     it('should throw a typeerror on try to overwrite with wrong datatype', function(){
 
-      Capsule.enableStrict();
-      var object = Capsule.extend({
+      FrozenCore.enableStrict();
+      var object = FrozenCore.extend({
         core: {
           id: 'immutable'
         }

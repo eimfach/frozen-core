@@ -4,7 +4,7 @@ var mocha = require('gulp-mocha');
 var coveralls = require('gulp-coveralls');
 
 gulp.task('cover', function (cb) {
-  gulp.src(['capsule.js'])
+  gulp.src(['frozen-core.js'])
   .pipe(istanbul()) // Covering files
   .pipe(istanbul.hookRequire()) // Force `require` to return covered files
   .on('finish', function () {
