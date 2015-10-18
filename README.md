@@ -1,5 +1,5 @@
 # frozen-core
-![](https://travis-ci.org/eimfach/capsule-js.svg?branch=master)
+![](https://travis-ci.org/eimfach/frozen-core.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/eimfach/capsule-js/badge.svg?branch=master)](https://coveralls.io/r/eimfach/capsule-js?branch=master)
 ![](https://david-dm.org/eimfach/capsule-js.svg)
 [![Code Climate](https://codeclimate.com/github/eimfach/capsule-js/badges/gpa.svg)](https://codeclimate.com/github/eimfach/capsule-js)
