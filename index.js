@@ -1,5 +1,5 @@
-var capsule = require('./capsule');
+var frozenCore = require('./frozen-core');
 
 // extend api
 
-module.exports = capsule;
+module.exports = frozenCore;
