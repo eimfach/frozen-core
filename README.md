@@ -4,14 +4,14 @@
 ![](https://david-dm.org/eimfach/frozen-core.svg)
 [![Code Climate](https://codeclimate.com/github/eimfach/capsule-js/badges/gpa.svg)](https://codeclimate.com/github/eimfach/capsule-js)
 
-General purpose lib to create maintainable and immutable Objects - the idea is to work without sideeffects .
+General purpose lib to create maintainable and immutable Objects - the idea is to work without side effects .
 
 - Very small (4KB, raw)
 - Object properties are immutable
 - Optional state properties
 - Simple Typesafe inheritance
 - Hierarchic method bubbling
-- Enforces a specifc way to implment your Objects and Methods
+- Enforces a specifc way to implement your Objects and Methods
 
 ```javascript
 var frozenCore = require('frozen-core');
