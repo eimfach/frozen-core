@@ -21,7 +21,7 @@ frozenCore.extend({
   core: {
     // immutable property values here
     //only functions allowed (other types are ommited)
-    // 'shares' the state object scope by obtaining a copy (lexical this refers to that copy)
+    // 'shares' the state object scope by obtaining a immutable copy (lexical this refers to that copy)
     /* Every method here only can access that copy but no other method within 
     the object except the inherited base api methods (extend, bubble) */
   }
