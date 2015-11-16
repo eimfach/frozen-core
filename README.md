@@ -21,10 +21,17 @@ var myObject = frozenCore.extend({
   core: {
     // immutable property values here
     //only functions allowed (other types are ommited)
-    // 'shares' the state object scope by obtaining a immutable copy (lexical this refers to that copy)
+    // 'shares' the state object scope by obtaining a immutable copy (the snapshot) (lexical this refers to that snapshot)
     /* Every method here only can access that copy but no other method within 
     the object except the inherited base api methods (extend, bubble) */
   }
 })
 // the properties of the resulting object are always immutable, not configurable
+```
+Public API 
+```javascript
+myObject.extend(/*options object*/);
+myObject.bubble(/*method to call (which will be executed on every parent)*/)
+myObject.getSnapshot() //returns the immutable state copy
+myObject.parent // reference to the latest origin
 ```
