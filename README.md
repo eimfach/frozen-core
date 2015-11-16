@@ -33,7 +33,7 @@ var myObject = frozenCore.extend({
 ```javascript
 myObject.extend(/*options object*/);
 myObject.bubble(/*method to call (which will be executed on every parent)*/)
-myObject.getSnapshot() //returns the immutable state copy
+myObject.getSnapshot() //returns a reference to the immutable state copy
 myObject.parent // reference to the latest origin
 ```
 
