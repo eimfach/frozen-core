@@ -10,11 +10,11 @@ General purpose lib for Object creation.
 - Optional state properties
 - Simple Typesafe inheritance
 - Hierarchic method bubbling
-- Enforces a specifc way to create your Objects
+- Enforces a specifc way to implment your Objects and Methods
 
 ```javascript
 var frozenCore = require('frozen-core');
-frozenCore.extend({
+var myObject = frozenCore.extend({
   state: {
     //mutable property values (the object mask)`
   },
