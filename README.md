@@ -43,7 +43,7 @@ myObject.parent // reference to the latest origin
 var cube = frozenCore.extend({
   core: {
     mutate: function(){
-      //'this' is safe to use here since it will be immutable - it will refer to the state object
+      //'this' is safe to use here since it will be immutable - it will refer to a copy of the state object
       /* this will have no effect !*/this.width = 1;
       return this.extend({
         state: {
