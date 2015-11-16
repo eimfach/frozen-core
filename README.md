@@ -26,4 +26,5 @@ frozenCore.extend({
     the object except the inherited base api methods (extend, bubble) */
   }
 })
+// the properties of the resulting object are always immutable, not configurable
 ```
