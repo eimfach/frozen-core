@@ -26,7 +26,7 @@ var myObject = frozenCore.extend({
     the object except the inherited public api methods (extend, bubble) */
   }
 })
-// the properties of the resulting object are always immutable, not configurable
+// the properties of the resulting object are always immutable, not configurable as the object itself too, one can't add new properties, remove or configure them
 ```
 Public API 
 ```javascript
