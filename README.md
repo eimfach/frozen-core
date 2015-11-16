@@ -6,13 +6,24 @@
 General purpose lib for Object creation.
 
 - Very small (4KB, raw)
-- Objectstructures for functional programming (immutable properties, objects are immutable, typesafety and more)
+- Object properties are immutable
 - Optional state properties
-- Typesafe inheritance
+- Simple Typesafe inheritance
 - Hierarchic method bubbling
+- Enforces a specifc way to create your Objects
 
-API:
-
-extend
-bubble
-parent
+```javascript
+var frozenCore = require('frozen-core');
+frozenCore.extend({
+  state: {
+    //mutable property values (the object mask)`
+  },
+  core: {
+    // immutable property values here
+    //only functions allowed (other types are ommited)
+    // 'shares' the state object scope by obtaining a copy (lexical this refers to that copy)
+    /* Every method here only can access that copy but no other method within 
+    the object except the inherited base api methods (extend, bubble) */
+  }
+})
+```
