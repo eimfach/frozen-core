@@ -28,10 +28,35 @@ var myObject = frozenCore.extend({
 })
 // the properties of the resulting object are always immutable, not configurable as the object itself too, one can't add new properties, remove or configure them
 ```
-Public API 
+##Public API 
 ```javascript
 myObject.extend(/*options object*/);
 myObject.bubble(/*method to call (which will be executed on every parent)*/)
 myObject.getSnapshot() //returns the immutable state copy
 myObject.parent // reference to the latest origin
+```
+
+## Simple implementation example
+
+```javascript
+var cube = frozenCore.extend({
+  core: {
+    mutate: function(){
+      return this.extend({
+        state: {
+          width: this.width+20,
+          height: this.height+20,
+          depth: this.depth+20
+        }
+      });
+    }
+  },
+  state: {
+    width: 0,
+    height: 0,
+    depth: 0
+  }
+});
+
+var mutatedCube = cube.mutate();
 ```
