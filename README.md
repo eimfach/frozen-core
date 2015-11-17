@@ -29,7 +29,7 @@ var myObject = frozenCore.extend({
 })
 // the properties of the resulting object are always immutable, not configurable as the object itself too, one can't add new properties, remove or configure them
 ```
-##Public API 
+## API 
 ```javascript
 myObject.extend(/*options object*/);
 myObject.bubble(/*method to call (which will be executed on every parent)*/)
