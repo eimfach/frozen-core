@@ -1,6 +1,6 @@
 {
   "name": "frozen-core",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "frozen-core.js - micro lib implementing an object creation paradigm for immutable structures",
   "main": "frozen-core.js",
   "directories": {
