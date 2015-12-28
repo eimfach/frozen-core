@@ -5,7 +5,7 @@ var FrozenCore = require('../frozen-core');
 chai.should();
 
 describe('FrozenCore', function(){
-  it('should be a function', function(){
+  it('should be an object', function(){
     FrozenCore.should.be.an("object");
 
   });
@@ -88,7 +88,7 @@ describe('FrozenCore', function(){
     object.id = "modified";
     object.id.should.be.a.function;
   });
-  it('should be possible to extend an merged object with new properties', function(){
+  it('should be possible to extend an object with new properties', function(){
     var object = FrozenCore.extend({
       state: {
         model: 'mutable',
@@ -338,7 +338,7 @@ describe('FrozenCore', function(){
 
     obj.should.not.have.property('stateVar');
   });
-  it('should make sure, functions in core scope have an isolated scope which inherited all scope properties', function(){
+  it('should make sure, functions in core scope have an isolated scope which inherited all state properties', function(){
 
     var obj = FrozenCore.extend({
       core: {
@@ -372,7 +372,7 @@ describe('FrozenCore', function(){
     var member = obj.modifyState('fred');
     member.should.equal('john');
   });
-  it('should make sure, inherited and non inherited core functions have overwritten or inherited or new properties from state in their scope', function(){
+  it('should make sure, properties are correctly set on extension', function(){
 
     var obj = FrozenCore.extend({
       core: {
@@ -420,7 +420,8 @@ describe('FrozenCore', function(){
     var obj = FrozenCore.extend({
       state: {
         id: 1,
-        member: "john"
+        member: "john",
+        create: function(){}
       }
     });
 
