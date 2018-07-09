@@ -4,7 +4,7 @@
 ![](https://david-dm.org/eimfach/frozen-core.svg)
 [![Code Climate](https://codeclimate.com/github/eimfach/capsule-js/badges/gpa.svg)](https://codeclimate.com/github/eimfach/capsule-js)
 
-Experimental lib to create immutable objects - the idea is to work without side effects.
+Experimental lib to create immutable objects.
 
 - Very small (4KB, raw)
 - Object properties are immutable
